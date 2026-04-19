@@ -1,14 +1,3 @@
----
-title: NaiyeBharat
-emoji: ⚖️
-colorFrom: blue
-colorTo: yellow
-sdk: docker
-pinned: true
-license: mit
-app_port: 7860
----
-
 # NaiyeBharat — Legal Advocacy Platform
 
 A premium legal services platform built with **Next.js**, offering comprehensive legal consultation, counselling, and case management services.
