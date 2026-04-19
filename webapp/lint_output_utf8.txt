@@ -1,0 +1,342 @@
+﻿
+> webapp@0.1.0 lint
+> eslint
+
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx
+   55:64   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx:55:64
+  53 |         <div className="absolute inset-0 z-0 opacity-30">
+  54 |           {[...Array(20)].map((_, i) => (
+> 55 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 15}s`, width: `${Math.random() * 4}px`, height: `${Math.random() * 4}px` }} />
+     |                                                                ^^^^^^^^^^^^^ Cannot call impure function
+  56 |           ))}
+  57 |         </div>
+  58 |                                                                                                                                                  react-hooks/purity
+   55:97   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx:55:97
+  53 |         <div className="absolute inset-0 z-0 opacity-30">
+  54 |           {[...Array(20)].map((_, i) => (
+> 55 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 15}s`, width: `${Math.random() * 4}px`, height: `${Math.random() * 4}px` }} />
+     |                                                                                                 ^^^^^^^^^^^^^ Cannot call impure function
+  56 |           ))}
+  57 |         </div>
+  58 |                                                                                                                 react-hooks/purity
+   55:140  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx:55:140
+  53 |         <div className="absolute inset-0 z-0 opacity-30">
+  54 |           {[...Array(20)].map((_, i) => (
+> 55 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 15}s`, width: `${Math.random() * 4}px`, height: `${Math.random() * 4}px` }} />
+     |                                                                                                                                            ^^^^^^^^^^^^^ Cannot call impure function
+  56 |           ))}
+  57 |         </div>
+  58 |                                                                     react-hooks/purity
+   55:173  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx:55:173
+  53 |         <div className="absolute inset-0 z-0 opacity-30">
+  54 |           {[...Array(20)].map((_, i) => (
+> 55 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 15}s`, width: `${Math.random() * 4}px`, height: `${Math.random() * 4}px` }} />
+     |                                                                                                                                                                             ^^^^^^^^^^^^^ Cannot call impure function
+  56 |           ))}
+  57 |         </div>
+  58 |                                    react-hooks/purity
+   55:207  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\about\page.tsx:55:207
+  53 |         <div className="absolute inset-0 z-0 opacity-30">
+  54 |           {[...Array(20)].map((_, i) => (
+> 55 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 15}s`, width: `${Math.random() * 4}px`, height: `${Math.random() * 4}px` }} />
+     |                                                                                                                                                                                                               ^^^^^^^^^^^^^ Cannot call impure function
+  56 |           ))}
+  57 |         </div>
+  58 |  react-hooks/purity
+  106:22   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react/no-unescaped-entities
+  106:121  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react/no-unescaped-entities
+  108:129  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react/no-unescaped-entities
+  116:22   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @next/next/no-img-element
+  130:22   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        @next/next/no-img-element
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\api\create-order\route.ts
+  58:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\api\send-email\route.ts
+   8:11  warning  'resolvedSubject' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  66:19  error    Unexpected any. Specify a different type              @typescript-eslint/no-explicit-any
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\api\verify-payment\route.ts
+  64:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\billing\page.tsx
+  4:8   warning  'Link' is defined but never used                  @typescript-eslint/no-unused-vars
+  8:10  warning  'formData' is assigned a value but never used     @typescript-eslint/no-unused-vars
+  8:20  warning  'setFormData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx
+  129:25   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx:129:25
+  127 |               className="particle" 
+  128 |               style={{ 
+> 129 |                 top: `${Math.random() * 100}%`, 
+      |                         ^^^^^^^^^^^^^ Cannot call impure function
+  130 |                 left: `${Math.random() * 100}%`,
+  131 |                 animationDelay: `${Math.random() * 20}s`,
+  132 |                 width: `${Math.random() * 4 + 2}px`,                                                                     react-hooks/purity
+  130:26   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx:130:26
+  128 |               style={{ 
+  129 |                 top: `${Math.random() * 100}%`, 
+> 130 |                 left: `${Math.random() * 100}%`,
+      |                          ^^^^^^^^^^^^^ Cannot call impure function
+  131 |                 animationDelay: `${Math.random() * 20}s`,
+  132 |                 width: `${Math.random() * 4 + 2}px`,
+  133 |                 height: `${Math.random() * 4 + 2}px`,                                                  react-hooks/purity
+  131:36   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx:131:36
+  129 |                 top: `${Math.random() * 100}%`, 
+  130 |                 left: `${Math.random() * 100}%`,
+> 131 |                 animationDelay: `${Math.random() * 20}s`,
+      |                                    ^^^^^^^^^^^^^ Cannot call impure function
+  132 |                 width: `${Math.random() * 4 + 2}px`,
+  133 |                 height: `${Math.random() * 4 + 2}px`,
+  134 |                 background: i % 2 === 0 ? '#d4af37' : 'white'  react-hooks/purity
+  132:27   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx:132:27
+  130 |                 left: `${Math.random() * 100}%`,
+  131 |                 animationDelay: `${Math.random() * 20}s`,
+> 132 |                 width: `${Math.random() * 4 + 2}px`,
+      |                           ^^^^^^^^^^^^^ Cannot call impure function
+  133 |                 height: `${Math.random() * 4 + 2}px`,
+  134 |                 background: i % 2 === 0 ? '#d4af37' : 'white'
+  135 |               }}                                           react-hooks/purity
+  133:28   error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\counselling\page.tsx:133:28
+  131 |                 animationDelay: `${Math.random() * 20}s`,
+  132 |                 width: `${Math.random() * 4 + 2}px`,
+> 133 |                 height: `${Math.random() * 4 + 2}px`,
+      |                            ^^^^^^^^^^^^^ Cannot call impure function
+  134 |                 background: i % 2 === 0 ? '#d4af37' : 'white'
+  135 |               }} 
+  136 |             />                                                                           react-hooks/purity
+  173:17   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @next/next/no-img-element
+  180:29   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    @next/next/no-img-element
+  199:270  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react/no-unescaped-entities
+  254:61   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react/no-unescaped-entities
+  254:118  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react/no-unescaped-entities
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx
+  28:25  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx:28:25
+  26 |               className="particle" 
+  27 |               style={{ 
+> 28 |                 top: `${Math.random() * 100}%`, 
+     |                         ^^^^^^^^^^^^^ Cannot call impure function
+  29 |                 left: `${Math.random() * 100}%`,
+  30 |                 animationDelay: `${Math.random() * 15}s`,
+  31 |                 width: `${Math.random() * 6}px`,                    react-hooks/purity
+  29:26  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx:29:26
+  27 |               style={{ 
+  28 |                 top: `${Math.random() * 100}%`, 
+> 29 |                 left: `${Math.random() * 100}%`,
+     |                          ^^^^^^^^^^^^^ Cannot call impure function
+  30 |                 animationDelay: `${Math.random() * 15}s`,
+  31 |                 width: `${Math.random() * 6}px`,
+  32 |                 height: `${Math.random() * 6}px`      react-hooks/purity
+  30:36  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx:30:36
+  28 |                 top: `${Math.random() * 100}%`, 
+  29 |                 left: `${Math.random() * 100}%`,
+> 30 |                 animationDelay: `${Math.random() * 15}s`,
+     |                                    ^^^^^^^^^^^^^ Cannot call impure function
+  31 |                 width: `${Math.random() * 6}px`,
+  32 |                 height: `${Math.random() * 6}px`
+  33 |               }}   react-hooks/purity
+  31:27  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx:31:27
+  29 |                 left: `${Math.random() * 100}%`,
+  30 |                 animationDelay: `${Math.random() * 15}s`,
+> 31 |                 width: `${Math.random() * 6}px`,
+     |                           ^^^^^^^^^^^^^ Cannot call impure function
+  32 |                 height: `${Math.random() * 6}px`
+  33 |               }} 
+  34 |             />                                             react-hooks/purity
+  32:28  error    Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\login\page.tsx:32:28
+  30 |                 animationDelay: `${Math.random() * 15}s`,
+  31 |                 width: `${Math.random() * 6}px`,
+> 32 |                 height: `${Math.random() * 6}px`
+     |                            ^^^^^^^^^^^^^ Cannot call impure function
+  33 |               }} 
+  34 |             />
+  35 |           ))}                                                                               react-hooks/purity
+  44:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 @next/next/no-img-element
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\page.tsx
+  105:15   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  157:87   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  157:144  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  184:19   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  357:56   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  363:13   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  382:9    error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+  382:16   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\pricing\page.tsx
+  34:64   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\pricing\page.tsx:34:64
+  32 |         <div className="absolute inset-0 z-0 opacity-20">
+  33 |           {[...Array(15)].map((_, i) => (
+> 34 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+     |                                                                ^^^^^^^^^^^^^ Cannot call impure function
+  35 |           ))}
+  36 |         </div>
+  37 |                                                                               react-hooks/purity
+  34:97   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\pricing\page.tsx:34:97
+  32 |         <div className="absolute inset-0 z-0 opacity-20">
+  33 |           {[...Array(15)].map((_, i) => (
+> 34 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+     |                                                                                                 ^^^^^^^^^^^^^ Cannot call impure function
+  35 |           ))}
+  36 |         </div>
+  37 |                                              react-hooks/purity
+  34:140  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\pricing\page.tsx:34:140
+  32 |         <div className="absolute inset-0 z-0 opacity-20">
+  33 |           {[...Array(15)].map((_, i) => (
+> 34 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+     |                                                                                                                                            ^^^^^^^^^^^^^ Cannot call impure function
+  35 |           ))}
+  36 |         </div>
+  37 |  react-hooks/purity
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\services\[id]\page.tsx
+  159:64   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\services\[id]\page.tsx:159:64
+  157 |         <div className="absolute inset-0 z-0 opacity-20">
+  158 |           {[...Array(15)].map((_, i) => (
+> 159 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+      |                                                                ^^^^^^^^^^^^^ Cannot call impure function
+  160 |           ))}
+  161 |         </div>
+  162 |                                                                               react-hooks/purity
+  159:97   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\services\[id]\page.tsx:159:97
+  157 |         <div className="absolute inset-0 z-0 opacity-20">
+  158 |           {[...Array(15)].map((_, i) => (
+> 159 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+      |                                                                                                 ^^^^^^^^^^^^^ Cannot call impure function
+  160 |           ))}
+  161 |         </div>
+  162 |                                              react-hooks/purity
+  159:140  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\services\[id]\page.tsx:159:140
+  157 |         <div className="absolute inset-0 z-0 opacity-20">
+  158 |           {[...Array(15)].map((_, i) => (
+> 159 |             <div key={i} className="particle" style={{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%`, animationDelay: `${Math.random() * 10}s` }} />
+      |                                                                                                                                            ^^^^^^^^^^^^^ Cannot call impure function
+  160 |           ))}
+  161 |         </div>
+  162 |  react-hooks/purity
+  234:94   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react/no-unescaped-entities
+  234:107  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react/no-unescaped-entities
+
+C:\Development\Project\NaiyeBharat\webapp\src\app\signup\page.tsx
+  3:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Development\Project\NaiyeBharat\webapp\src\components\Footer.tsx
+  13:17  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Development\Project\NaiyeBharat\webapp\src\components\GlobalSOS.tsx
+  4:10  warning  'useEffect' is defined but never used              @typescript-eslint/no-unused-vars
+  7:21  warning  'setIsVisible' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Development\Project\NaiyeBharat\webapp\src\components\Navbar.tsx
+  26:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Development\Project\NaiyeBharat\webapp\src\components\Navbar.tsx:26:5
+  24 |
+  25 |   useEffect(() => {
+> 26 |     setMobileMenuOpen(false);
+     |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  27 |   }, [pathname]);
+  28 |
+  29 |   return (  react-hooks/set-state-in-effect
+  52:19  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @next/next/no-img-element
+
+C:\Development\Project\NaiyeBharat\webapp\src\utils\store.ts
+   5:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   6:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   9:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  10:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+Γ£û 59 problems (42 errors, 17 warnings)
+
