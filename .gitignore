@@ -1,6 +1,0 @@
-webapp/node_modules
-webapp/.next
-webapp/.env*.local
-webapp/out
-*.log
-.DS_Store
