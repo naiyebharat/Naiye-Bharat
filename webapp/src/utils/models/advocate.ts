@@ -8,6 +8,9 @@ const AdvocateSchema = new Schema({
   pricing: { type: Number, required: true },
   videoUrl: { type: String, default: '' },
   isAvailable: { type: Boolean, default: true },
+  qualification: { type: String, default: 'Verified Practitioner' },
+  practiceYears: { type: Number, default: 5 },
+  avatar: { type: String, default: '' },
   email: { 
     type: String, 
     required: true, 
@@ -20,7 +23,6 @@ const AdvocateSchema = new Schema({
     trim: true
   }
 }, { timestamps: true }); 
-
 
 const Advocate = models.Advocate || model('Advocate', AdvocateSchema);
 export default Advocate;

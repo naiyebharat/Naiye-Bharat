@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
     // Parse payload incoming data parameters
     const body = await request.json();
-    const { name, age, specialty, language, pricing, videoUrl, email, phoneNumber } = body;
+    const { name, age, specialty, language, pricing, videoUrl, email, phoneNumber, qualification, practiceYears, avatar } = body;
 
     // Strict Server-Side Validation (Naye fields ke sath)
     if (!name || !age || !specialty || !pricing || !email || !phoneNumber) {
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
 
     const parsedAge = Number(age);
     const parsedPricing = Number(pricing);
+    const parsedYears = practiceYears ? Number(practiceYears) : 5;
 
     if (isNaN(parsedAge) || isNaN(parsedPricing)) {
       return NextResponse.json(
@@ -37,6 +38,9 @@ export async function POST(request: Request) {
       language: Array.isArray(language) ? language : [language],
       pricing: parsedPricing,
       videoUrl: videoUrl || '',
+      qualification: qualification || 'Verified Practitioner',
+      practiceYears: isNaN(parsedYears) ? 5 : parsedYears,
+      avatar: avatar || '',
       email: email.toLowerCase().trim(), 
       phoneNumber: phoneNumber,    
       isAvailable: true 

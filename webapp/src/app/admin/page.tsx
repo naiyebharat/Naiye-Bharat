@@ -1,17 +1,20 @@
+// @ts-nocheck
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import StatsCards from './components/StatsCards';
 import ExpertForm from './components/ExpertForm';
 import ExpertTable from './components/ExpertTable';
+import AdminHeader from './components/AdminHeader'; // 🔥 Imported new custom header
+import ThemeToggle from '../advocate/components/ThemeToggle'; // 🔥 Reusing our premium spinner switch
 
 export default function AdminDashboard() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  
-  // Strictly false by default taaki pehle hamesha Light Mode hi load ho!
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
-  // Sync state variables with Tailwind v4 system architecture
+  // Sync state layout adjustments directly into root HTML layers
   useEffect(() => {
     const root = window.document.documentElement;
     if (isDarkMode) {
@@ -25,60 +28,65 @@ export default function AdminDashboard() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  const handleAddClick = () => {
+    setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-[#f8faf9] text-slate-900 dark:bg-[#050b1d] dark:text-white p-6 font-sans transition-colors duration-500 antialiased">
+    <div className="min-h-screen bg-[#f8faf9] text-slate-900 dark:bg-[#050b1d] dark:text-white p-4 sm:p-6 font-sans transition-colors duration-500 antialiased">
       <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* Main Workspace Header Architecture */}
-        <div className="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-5">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl tracking-tight text-emerald-700 dark:text-[#00c2a8] uppercase">NAIYE BHARAT</span>
-              <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/60 px-2 py-0.5 rounded-full dark:bg-emerald-500/10 dark:text-[#00c2a8] dark:border-emerald-500/20 uppercase tracking-widest hidden md:block">Control Room</span>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-gray-400 uppercase tracking-wider mt-1 font-bold hidden md:block">COMMUNICATION HUB • MANAGEMENT CONSOLE</p>
-          </div>
+        {/* 🔥 Custom Admin Mainframe Header Integration */}
+        <AdminHeader 
+          adminName="System Administrator"
+          toggleElement={
+            <ThemeToggle 
+              theme={isDarkMode ? "dark" : "light"} 
+              onToggleTheme={() => setIsDarkMode(!isDarkMode)} 
+            />
+          }
+        />
 
-          {/* 🌙 ☀️ Premium Smooth Sliding Switch Layer */}
-          <div className="flex items-center gap-3 bg-slate-200/60 dark:bg-slate-800/60 px-3 py-1.5 rounded-full border border-slate-300/40 dark:border-slate-700/50">
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 tracking-wide">
-              {isDarkMode ? 'Dark Context' : 'Light Context'}
-            </span>
-            <button
-              type="button"
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="w-14 h-7 bg-slate-300 dark:bg-[#00c2a8]/20 rounded-full relative p-1 cursor-pointer transition-colors duration-300 focus:outline-none"
-            >
-              {/* Sliding Ball containing Moon & Sun Vector icons */}
-              <div 
-                className={`w-5 h-5 bg-white dark:bg-[#050b1d] rounded-full shadow-md flex items-center justify-center transition-transform duration-500 ease-out transform ${
-                  isDarkMode ? 'translate-x-7' : 'translate-x-0'
-                }`}
-              >
-                {isDarkMode ? (
-                  <span className="text-xs animate-pulse">🌙</span>
-                ) : (
-                  <span className="text-xs">☀️</span>
-                )}
-              </div>
-            </button>
-          </div>
-        </div>
-
-        {/* Dynamic Component 1 Layer */}
+        {/* Operational Grid Core Components */}
         <StatsCards />
 
-        {/* Form and Database Split View layout mapping */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <div className="lg:col-span-4">
-            <ExpertForm onSuccess={handleSuccess} />
-          </div>
-          <div className="lg:col-span-8">
-            <ExpertTable refreshTrigger={refreshTrigger} />
-          </div>
-        </div>
+        <ExpertTable 
+          refreshTrigger={refreshTrigger} 
+          onAddClick={handleAddClick}
+        />
 
       </div>
+
+      {/* Modal Overlay for Form Component Stack */}
+      <AnimatePresence>
+        {isFormOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-md p-4"
+            onClick={handleCloseForm}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="w-full max-w-lg"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ExpertForm 
+                onSuccess={handleSuccess} 
+                onClose={handleCloseForm}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

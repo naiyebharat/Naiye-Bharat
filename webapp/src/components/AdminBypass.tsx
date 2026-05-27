@@ -8,15 +8,18 @@ import GlobalSOS from '@/components/GlobalSOS';
 export default function AdminBypass({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
-  // Agar URL /admin se shuru hota hai, toh yeh true ho jayega
-  const isAdmin = pathname?.startsWith('/admin');
+  // 🚀 Check karo agar URL /admin, /counseling ya /advocate se shuru hota hai
+  const shouldBypass = 
+    pathname?.startsWith('/admin') || 
+    pathname?.startsWith('/counseling') || 
+    pathname?.startsWith('/advocate'); // <-- 🔥 Advocate panel ko yahan add kar diya
 
-  if (isAdmin) {
-    // Admin panel par sirf main content (form) dikhao, baaki sab hide
+  if (shouldBypass) {
+    // Admin, Counseling, aur Advocate par purely main app screen render hogi (No Navbar, Footer, SOS)
     return <>{children}</>;
   }
 
-  // Normal clients ke liye sab kuch dikhao
+  // Normal clients ke liye public website pages par sab kuch dikhao
   return (
     <>
       <Navbar />
