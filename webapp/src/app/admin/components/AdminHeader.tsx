@@ -94,11 +94,6 @@ export default function AdminHeader({ adminName = "System Admin", toggleElement 
                   <p className="text-[9px] font-medium text-slate-400 dark:text-slate-500">System Root</p>
                 </div>
 
-                <div className="flex items-center gap-2 px-2.5 py-1.5 text-[10px] font-black text-amber-600 dark:text-[#00c2a8] bg-amber-50/50 dark:bg-emerald-950/10 rounded-lg mb-1 uppercase tracking-wider">
-                  <ShieldAlert className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>Secure Mainframe</span>
-                </div>
-
                 {/* Simulated Logout System Hook */}
                 <button
                   onClick={() => {
@@ -108,7 +103,7 @@ export default function AdminHeader({ adminName = "System Admin", toggleElement 
                   className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left text-xs font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
-                  <span>Exit Console</span>
+                  <span>Log Out</span>
                 </button>
               </motion.div>
             )}

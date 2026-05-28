@@ -42,7 +42,8 @@ export default function ChatArea({ activeClient, onCloseChat, triggerToast }: Ch
     try {
       const res = await axios.get(`/api/chat/messages?roomId=${roomId}`);
       if (res.data.success) {
-        setMessages(res.data.data || []);
+        // API returns `messages` key (not `data`)
+        setMessages(res.data.messages || []);
       }
     } catch (err) {
       console.error("Message fetch error:", err);
@@ -75,7 +76,9 @@ export default function ChatArea({ activeClient, onCloseChat, triggerToast }: Ch
     if (!text || !activeClient?.roomId || sending) return;
 
     setSending(true);
-    // Optimistic UI
+    setTypedMessage("");
+
+    // Optimistic UI — show immediately, next poll will sync with DB
     const optimistic: MessageNode = {
       senderType: "expert",
       senderName: "Advocate",
@@ -83,7 +86,6 @@ export default function ChatArea({ activeClient, onCloseChat, triggerToast }: Ch
       time: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
     };
     setMessages((prev) => [...prev, optimistic]);
-    setTypedMessage("");
 
     try {
       await axios.post("/api/chat/messages", {
@@ -92,13 +94,15 @@ export default function ChatArea({ activeClient, onCloseChat, triggerToast }: Ch
         senderName: "Advocate",
         text,
       });
-      // Refetch to sync
-      await fetchMessages(activeClient.roomId);
+      // After successful save, refetch to get the real DB message (with _id, createdAt)
+      // Small delay ensures DB has committed the write
+      setTimeout(() => fetchMessages(activeClient.roomId), 300);
       triggerToast("Message Sent", "Your reply has been delivered securely.", "success");
     } catch (err: any) {
       triggerToast("Send Failed", err.response?.data?.error || "Could not send message.", "error");
-      // Remove optimistic on failure
+      // Revert optimistic on failure
       setMessages((prev) => prev.filter((m) => m !== optimistic));
+      setTypedMessage(text); // restore text
     } finally {
       setSending(false);
     }

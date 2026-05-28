@@ -4,53 +4,78 @@ import Advocate from '@/utils/models/advocate';
 
 export async function POST(request: Request) {
   try {
-    // Database Connection initialize karein
+    // 1. Database Connection initialize karein
     await connectDB();
 
-    // Parse payload incoming data parameters
+    // 2. Parse payload incoming parameters
     const body = await request.json();
-    const { name, age, specialty, language, pricing, videoUrl, email, phoneNumber, qualification, practiceYears, avatar } = body;
+    const { 
+      name, 
+      experience, 
+      specialty, 
+      language, 
+      pricing, 
+      videoUrl, 
+      email, 
+      phoneNumber, 
+      qualification, 
+      avatar,
+      password 
+    } = body;
 
-    // Strict Server-Side Validation (Naye fields ke sath)
-    if (!name || !age || !specialty || !pricing || !email || !phoneNumber) {
+    // 3. Strict Server-Side Validation (Naye parameters ke sath)
+    if (!name || !experience || !specialty || !pricing || !email || !phoneNumber || !password) {
       return NextResponse.json(
-        { error: "Validation Failed: Missing required credentials (Name, Age, Email, Phone, Domain, Fee)." }, 
+        { error: "Validation Failed: Missing required credentials (Name, Experience, Password, Email, Phone, Domain, Fee)." }, 
         { status: 400 }
       );
     }
 
-    const parsedAge = Number(age);
+    // 4. Checking if email already exists matrix
+    const existingAdvocate = await Advocate.findOne({ email: email.toLowerCase().trim() });
+    if (existingAdvocate) {
+      return NextResponse.json(
+        { error: "Conflict: A lawyer with this email address is already registered." },
+        { status: 409 }
+      );
+    }
+
+    const parsedExperience = Number(experience);
     const parsedPricing = Number(pricing);
-    const parsedYears = practiceYears ? Number(practiceYears) : 5;
 
-    if (isNaN(parsedAge) || isNaN(parsedPricing)) {
+    if (isNaN(parsedExperience) || isNaN(parsedPricing)) {
       return NextResponse.json(
-        { error: "Validation Failed: Age and Pricing must be valid numbers." }, 
+        { error: "Validation Failed: Experience and Pricing must be valid numbers." }, 
         { status: 400 }
       );
     }
 
-    // Create document entry inside MongoDB Atlas
+    // 5. Create document entry inside MongoDB Atlas
+    // (Note: Password pre-save hook se auto encrypt ho jayega, aur role dynamic text standard se handle hoga)
     const newAdvocate = await Advocate.create({
       name,
-      age: parsedAge,
+      experience: parsedExperience,
       specialty,
       language: Array.isArray(language) ? language : [language],
       pricing: parsedPricing,
       videoUrl: videoUrl || '',
       qualification: qualification || 'Verified Practitioner',
-      practiceYears: isNaN(parsedYears) ? 5 : parsedYears,
       avatar: avatar || '',
       email: email.toLowerCase().trim(), 
-      phoneNumber: phoneNumber,    
+      phoneNumber: phoneNumber.trim(),    
+      password: password, // Mongoose schema automatically isko hash kar dega save se pehle
       isAvailable: true 
     });
 
-    // 5. Success Response
+    // 6. Security Trim: Send response without password node for network transparency
+    const secureDataResponse = newAdvocate.toObject();
+    delete secureDataResponse.password;
+
+    // 7. Success Response
     return NextResponse.json({ 
       success: true, 
-      message: "Advocate with secure credentials successfully registered! 🎉", 
-      data: newAdvocate 
+      message: "Advocate credentials successfully configured and registered inside security node! 🎉", 
+      data: secureDataResponse 
     }, { status: 201 });
 
   } catch (error: any) {

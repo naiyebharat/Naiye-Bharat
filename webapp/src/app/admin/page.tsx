@@ -6,13 +6,16 @@ import { AnimatePresence, motion } from 'framer-motion';
 import StatsCards from './components/StatsCards';
 import ExpertForm from './components/ExpertForm';
 import ExpertTable from './components/ExpertTable';
-import AdminHeader from './components/AdminHeader'; // 🔥 Imported new custom header
-import ThemeToggle from '../advocate/components/ThemeToggle'; // 🔥 Reusing our premium spinner switch
+import AdminHeader from './components/AdminHeader';
+import ThemeToggle from '../advocate/components/ThemeToggle';
+import OrdersLedger from './components/OrdersLedger';
+import DetailOrderView from "./components/DetailOrderView";
 
 export default function AdminDashboard() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
   // Sync state layout adjustments directly into root HTML layers
   useEffect(() => {
@@ -58,8 +61,18 @@ export default function AdminDashboard() {
           refreshTrigger={refreshTrigger} 
           onAddClick={handleAddClick}
         />
+        
+        {/* 🔥 Yahan prop pass kiya taaki click tracking dashboard tak pahunche */}
+        <OrdersLedger onViewOrder={setSelectedOrder} />
 
       </div>
+
+      {/* Global Mounted View Component Layer */}
+      <DetailOrderView 
+        isOpen={Boolean(selectedOrder)} 
+        order={selectedOrder} 
+        onClose={() => setSelectedOrder(null)} 
+      />
 
       {/* Modal Overlay for Form Component Stack */}
       <AnimatePresence>

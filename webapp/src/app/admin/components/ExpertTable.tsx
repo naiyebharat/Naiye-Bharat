@@ -3,10 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { RotateCw, Trash2, Users, CheckCircle2, AlertCircle, X, UserPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-
-
-
 
 export default function ExpertTable({ 
   refreshTrigger, 
@@ -96,7 +92,7 @@ export default function ExpertTable({
     }
   };
 
-  // Toggle Availability (Static for now)
+  // Toggle Availability
   const [availabilityStates, setAvailabilityStates] = useState<Record<string, boolean>>({});
 
   const toggleAvailability = (id: string) => {
@@ -123,7 +119,7 @@ export default function ExpertTable({
         >
           <Users className="w-5 h-5 text-emerald-600 dark:text-[#00c2a8]" />
           <div>
-            <h2 className="hidden md:block text-md font-bold text-slate-800 dark:text-white">Master Expert Database Directory</h2>
+            <h2 className="hidden md:block text-md font-bold text-slate-800 dark:text-white">Master Advocate Database Directory</h2>
             <p className="hidden md:block text-[11px] text-slate-500 dark:text-gray-400 mt-0.5">Manage active listings, access secure profiles and logs.</p>
           </div>
         </motion.div>
@@ -135,7 +131,6 @@ export default function ExpertTable({
           transition={{ delay: 0.3 }}
           className="flex items-center gap-2"
         >
-          {/* Add Expert Button */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -144,10 +139,9 @@ export default function ExpertTable({
             className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 dark:bg-[#00c2a8] dark:hover:bg-[#00ebd0] text-white dark:text-[#050b1d] rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-md cursor-pointer"
           >
             <UserPlus className="w-4 h-4" />
-            <span className="hidden sm:inline">Add Expert</span>
+            <span className="hidden sm:inline">Add Advocate</span>
           </motion.button>
 
-          {/* Refresh Button */}
           <button
             type="button"
             onClick={handleManualRefresh}
@@ -163,148 +157,147 @@ export default function ExpertTable({
       </div>
 
       {/* Main Grid View Box Container */}
-<div className="flex-1 overflow-y-auto pr-1 scrollbar-premium">
-  {loading && !isRefreshing ? (
-    <div className="flex flex-col items-center justify-center py-24 gap-4 select-none">
-      {/* 🌟 PREMIUM ADAPTIVE SPINNER BLOCK */}
-      <div className="relative w-10 h-10">
-        {/* Outer background track shadow circle */}
-        <div className="absolute inset-0 rounded-full border-4 border-slate-100 dark:border-slate-800/80"></div>
-        {/* Active spinning indicator loop matching both themes */}
-        <div className="absolute inset-0 rounded-full border-4 border-emerald-600 dark:border-[#00c2a8] border-t-transparent dark:border-t-transparent animate-spin"></div>
+      <div className="flex-1 overflow-y-auto pr-1 scrollbar-premium">
+        {loading && !isRefreshing ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-4 select-none">
+            <div className="relative w-10 h-10">
+              <div className="absolute inset-0 rounded-full border-4 border-slate-100 dark:border-slate-800/80"></div>
+              <div className="absolute inset-0 rounded-full border-4 border-emerald-600 dark:border-[#00c2a8] border-t-transparent dark:border-t-transparent animate-spin"></div>
+            </div>
+            <div className="flex flex-col items-center gap-1 text-center">
+              <span className="text-xs text-slate-700 dark:text-slate-300 font-bold uppercase tracking-widest animate-pulse">
+                Loading Live Directories
+              </span>
+              <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold tracking-wider">
+                Synchronizing expert cluster nodes...
+              </span>
+            </div>
+          </div>
+        ) : advocates.length === 0 ? (
+          <div className="flex items-center justify-center py-20 text-xs text-slate-500 dark:text-gray-400 font-semibold uppercase tracking-wider">
+            No Advocates found in directory pipeline.
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="w-full overflow-x-auto scrollbar-premium"
+          >
+            <table className="w-full min-w-[900px] text-left border-collapse">
+              <thead className="sticky top-0 bg-white dark:bg-[#0b1329] z-10 shadow-[0_1px_0_0_rgba(0,0,0,0.05)] dark:shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
+                <tr className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <th className="pb-3 pt-1">Advocate Profile</th>
+                  <th className="pb-3 pt-1">Email</th>
+                  <th className="pb-3 pt-1">Phone</th>
+                  <th className="pb-3 pt-1">Core Specialty</th>
+                  <th className="pb-3 pt-1">Languages</th>
+                  <th className="pb-3 pt-1">Session Cost</th>
+                  <th className="pb-3 pt-1">Availability</th>
+                  <th className="pb-3 pt-1 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+                <AnimatePresence>
+                  {advocates.map((adv, idx) => (
+                    <motion.tr
+                      key={adv._id || adv.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, x: -50 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors"
+                    >
+                      {/* Avatar Profile with Photo & Experience Data */}
+                      <td className="py-3">
+                        <div className="flex items-center gap-2.5">
+                          <ExpertAvatar
+                            photoUrl={adv.videoUrl}
+                            name={adv.name}
+                          />
+                          <div className="min-w-0">
+                            <h4 className="font-extrabold text-slate-800 dark:text-white leading-tight truncate">{adv.name}</h4>
+                            {/* 🔥 Age hatakar backend 'experience' property assign kar di hai */}
+                            <p className="text-[10px] text-emerald-600 dark:text-[#00c2a8] mt-0.5 truncate max-w-[140px] font-bold">
+                              {`Exp: ${adv.experience ?? 0} Yrs`}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Email */}
+                      <td className="py-3">
+                        <span className="font-bold text-slate-700 dark:text-slate-300 truncate max-w-[160px] block" title={adv.email || 'N/A'}>
+                          {adv.email || 'N/A'}
+                        </span>
+                      </td>
+
+                      {/* Phone */}
+                      <td className="py-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-semibold">{adv.phoneNumber || 'N/A'}</span>
+                      </td>
+
+                      {/* Specialty */}
+                      <td className="py-3">
+                        <span className={`text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wide ${
+                          adv.specialty === 'Mental Health'
+                            ? 'bg-purple-50 text-purple-700 border-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:border-transparent'
+                            : adv.specialty === 'Legal Support' || adv.specialty === 'Corporate Law'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-transparent'
+                              : 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-transparent'
+                        }`}>
+                          {adv.specialty}
+                        </span>
+                      </td>
+
+                      {/* Languages */}
+                      <td className="py-3 text-[11px] text-slate-700 dark:text-slate-300 font-semibold truncate max-w-[120px]" title={Array.isArray(adv.language) ? adv.language.join(', ') : adv.language}>
+                        {Array.isArray(adv.language) ? adv.language.join(', ') : adv.language}
+                      </td>
+
+                      {/* Cost */}
+                      <td className="py-3 font-extrabold text-slate-800 dark:text-[#00c2a8]">
+                        ₹{adv.pricing}
+                      </td>
+
+                      {/* Availability Toggle */}
+                      <td className="py-3">
+                        <AvailabilityToggle
+                          isAvailable={availabilityStates[adv._id || adv.id] ?? true}
+                          onToggle={() => toggleAvailability(adv._id || adv.id)}
+                        />
+                      </td>
+
+                      {/* Actions */}
+                      <td className="py-3 text-right">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => handleDeleteClick(adv._id || adv.id, adv.name)}
+                          className="text-slate-400 hover:text-rose-500 transition-all cursor-pointer p-1.5 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg inline-block"
+                        >
+                          <Trash2 className="w-4 h-4 text-red-500" />
+                        </motion.button>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
+              </tbody>
+            </table>
+          </motion.div>
+        )}
+
+        {/* End of List Marker */}
+        <div className="mt-6 mb-2 flex items-center justify-center gap-3 opacity-80 dark:opacity-50">
+          <div className="h-[1px] bg-gradient-to-r from-transparent to-slate-200 dark:to-slate-700 flex-1"></div>
+          <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-widest text-slate-600 dark:text-slate-400 uppercase bg-emerald-50/20 border border-emerald-100/50 dark:bg-slate-900 dark:border-slate-800 px-3 py-1 rounded-full">
+            <span className="w-1.5 h-1.5 bg-emerald-500 dark:bg-[#00c2a8] rounded-full"></span>
+            Advocate Directory Pipeline Ends
+          </div>
+          <div className="h-[1px] bg-gradient-to-l from-transparent to-slate-200 dark:to-slate-700 flex-1"></div>
+        </div>
       </div>
-      
-      {/* Loading Meta Text */}
-      <div className="flex flex-col items-center gap-1 text-center">
-        <span className="text-xs text-slate-700 dark:text-slate-300 font-bold uppercase tracking-widest animate-pulse">
-          Loading Live Directories
-        </span>
-        <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold tracking-wider">
-          Synchronizing expert cluster nodes...
-        </span>
-      </div>
-    </div>
-  ) : advocates.length === 0 ? (
-    <div className="flex items-center justify-center py-20 text-xs text-slate-500 dark:text-gray-400 font-semibold uppercase tracking-wider">
-      No Experts found in directory pipeline.
-    </div>
-  ) : (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.4 }}
-      className="w-full overflow-x-auto scrollbar-premium"
-    >
-      <table className="w-full min-w-[900px] text-left border-collapse">
-        <thead className="sticky top-0 bg-white dark:bg-[#0b1329] z-10 shadow-[0_1px_0_0_rgba(0,0,0,0.05)] dark:shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
-          <tr className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-            <th className="pb-3 pt-1">Expert Profile</th>
-            <th className="pb-3 pt-1">Email</th>
-            <th className="pb-3 pt-1">Phone</th>
-            <th className="pb-3 pt-1">Core Specialty</th>
-            <th className="pb-3 pt-1">Languages</th>
-            <th className="pb-3 pt-1">Session Cost</th>
-            <th className="pb-3 pt-1">Availability</th>
-            <th className="pb-3 pt-1 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
-          <AnimatePresence>
-            {advocates.map((adv, idx) => (
-              <motion.tr
-                key={adv._id || adv.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ delay: idx * 0.05 }}
-                className="hover:bg-slate-50/50 dark:hover:bg-slate-900/30 transition-colors"
-              >
-                {/* Avatar Profile with Photo */}
-                <td className="py-3">
-                  <div className="flex items-center gap-2.5">
-                    <ExpertAvatar
-                      photoUrl={adv.videoUrl}
-                      name={adv.name}
-                    />
-                    <div className="min-w-0">
-                      <h4 className="font-extrabold text-slate-800 dark:text-white leading-tight truncate">{adv.name}</h4>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate max-w-[140px] font-semibold">{`Age: ${adv.age} Yrs`}</p>
-                    </div>
-                  </div>
-                </td>
 
-                {/* Email */}
-                <td className="py-3">
-                  <span className="font-bold text-emerald-600 dark:text-emerald-400 truncate max-w-[160px] block" title={adv.email || 'N/A'}>
-                    {adv.email || 'N/A'}
-                  </span>
-                </td>
-
-                {/* Phone */}
-                <td className="py-3">
-                  <span className="text-slate-600 dark:text-slate-400 font-semibold">{adv.phoneNumber || 'N/A'}</span>
-                </td>
-
-                {/* Specialty */}
-                <td className="py-3">
-                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded border uppercase tracking-wide ${
-                    adv.specialty === 'Mental Health'
-                      ? 'bg-purple-50 text-purple-700 border-purple-100 dark:bg-purple-500/10 dark:text-purple-400 dark:border-transparent'
-                      : adv.specialty === 'Legal Support'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-transparent'
-                        : 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-transparent'
-                  }`}>
-                    {adv.specialty}
-                  </span>
-                </td>
-
-                {/* Languages */}
-                <td className="py-3 text-[11px] text-slate-700 dark:text-slate-300 font-semibold truncate max-w-[120px]" title={Array.isArray(adv.language) ? adv.language.join(', ') : adv.language}>
-                  {Array.isArray(adv.language) ? adv.language.join(', ') : adv.language}
-                </td>
-
-                {/* Cost */}
-                <td className="py-3 font-extrabold text-slate-800 dark:text-[#00c2a8]">
-                  ₹{adv.pricing}
-                </td>
-
-                {/* Availability Toggle */}
-                <td className="py-3">
-                  <AvailabilityToggle
-                    isAvailable={availabilityStates[adv._id || adv.id] ?? true}
-                    onToggle={() => toggleAvailability(adv._id || adv.id)}
-                  />
-                </td>
-
-                {/* Actions */}
-                <td className="py-3 text-right">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => handleDeleteClick(adv._id || adv.id, adv.name)}
-                    className="text-slate-400 hover:text-rose-500 transition-all cursor-pointer p-1.5 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-lg inline-block"
-                  >
-                    <Trash2 className="w-4 h-4 text-red-500" />
-                  </motion.button>
-                </td>
-              </motion.tr>
-            ))}
-          </AnimatePresence>
-        </tbody>
-      </table>
-    </motion.div>
-  )}
-
-  {/* End of List Marker */}
-  <div className="mt-6 mb-2 flex items-center justify-center gap-3 opacity-80 dark:opacity-50">
-    <div className="h-[1px] bg-gradient-to-r from-transparent to-slate-200 dark:to-slate-700 flex-1"></div>
-    <div className="flex items-center gap-1.5 text-[10px] font-extrabold tracking-widest text-slate-600 dark:text-slate-400 uppercase bg-emerald-50/20 border border-emerald-100/50 dark:bg-slate-900 dark:border-slate-800 px-3 py-1 rounded-full">
-      <span className="w-1.5 h-1.5 bg-emerald-500 dark:bg-[#00c2a8] rounded-full"></span>
-      Expert List Ends Here
-    </div>
-    <div className="h-[1px] bg-gradient-to-l from-transparent to-slate-200 dark:to-slate-700 flex-1"></div>
-  </div>
-</div>
       {/* CONFIRMATION POPUP MODAL OVERLAY */}
       <AnimatePresence>
         {deleteModalOpen && (
@@ -361,7 +354,7 @@ export default function ExpertTable({
         )}
       </AnimatePresence>
 
-      {/* PREMIUM BOTTOM-LEFT SLIDE-UP TOAST COMPONENT */}
+      {/* BOTTOM-LEFT SLIDE-UP TOAST COMPONENT */}
       <AnimatePresence>
         {toast.show && (
           <motion.div
