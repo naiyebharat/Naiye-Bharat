@@ -24,6 +24,23 @@ export default function ClientPortal() {
     message: "",
     type: "info"
   });
+  const [clientName, setClientName] = useState<string>("Client User");
+
+  // Fetch dynamic profile details on mount
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.success && data.user) {
+          setClientName(data.user.name);
+        }
+      } catch (err) {
+        console.error("Profile Fetch Error:", err);
+      }
+    }
+    fetchProfile();
+  }, []);
 
   // Theme LocalStorage Sync Engine
   useEffect(() => {
@@ -157,7 +174,7 @@ export default function ClientPortal() {
         theme={theme}
         onToggleTheme={handleToggleTheme}
         onLogoutClick={() => setIsLogoutOpen(true)}
-        clientName={casesList[0]?.clientName || "Rahul Sharma"}
+        clientName={clientName}
       />
 
       <div className="flex-1 flex flex-row min-h-0 relative z-10">
@@ -189,7 +206,15 @@ export default function ClientPortal() {
       <LogoutModal
         isOpen={isLogoutOpen}
         onClose={() => setIsLogoutOpen(false)}
-        onConfirm={() => setIsLogoutOpen(false)}
+        onConfirm={async () => {
+          try {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/login";
+          } catch (err) {
+            console.error("Logout failed:", err);
+            setIsLogoutOpen(false);
+          }
+        }}
       />
     </div>
   );

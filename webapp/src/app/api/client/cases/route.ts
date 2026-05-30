@@ -1,16 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB } from "@/utils/dbConnect"; // 💡 Apne global dbConnect ko use karo conflicts se bachne ke liye
+import { connectDB } from "@/utils/dbConnect";
 import Order from "@/utils/models/Order";
 import ChatRoom from "@/utils/models/ChatRoom";
 import Message from "@/utils/models/Message";
 import "@/utils/models/advocate";
+import { withAuth } from "@/utils/withAuth";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // ── Auth guard — only verified clients can access their own cases ──
+  const auth = await withAuth(req, "client");
+  if ("error" in auth) return auth.error;
+
+  const { email } = auth.payload; // JWT se client ka email nikalo
+
   try {
     await connectDB();
 
-    // 1. Sirf verified paid orders nikalenge
-    const orders = await Order.find({ isVerified: true })
+    // 🔒 SCOPED: Sirf is client ke verified paid orders nikalenge (email se filter)
+    const orders = await Order.find({ isVerified: true, email: email.toLowerCase().trim() })
       .populate("expertId", "name")
       .sort({ createdAt: -1 })
       .lean();
@@ -18,13 +25,9 @@ export async function GET() {
     const formattedCases = [];
 
     for (const order of orders as any[]) {
-      // 2. Har order ke corresponding ChatRoom dhoondo (agar nahi hai toh fallback setup)
       let room = await ChatRoom.findOne({ orderId: order._id }).lean() as any;
-      
-      // Safety net: Agar room kisi wajah se create nahi hua, toh order ID fallback use karenge
       const targetRoomId = room ? room._id.toString() : order._id.toString();
 
-      // 3. Real-time message snippet pull engine
       let snippet = "No connection payloads established yet.";
       let finalTimestamp = order.createdAt;
 
@@ -43,13 +46,12 @@ export async function GET() {
         snippet = order.issueDescription.length > 45 ? `${order.issueDescription.substring(0, 45)}...` : order.issueDescription;
       }
 
-      // Sync custom model state definitions with UI layouts
       let mappedStatus: "ACTIVE" | "PENDING" | "COMPLETED" = "PENDING";
       if (room?.status === "active_discussion" || order.status === "paid") mappedStatus = "ACTIVE";
       if (room?.status === "closed") mappedStatus = "COMPLETED";
 
       formattedCases.push({
-        id: targetRoomId, // 🔥 CHAT WAALE ROOM ID KO INJECT KIYA (Polling isi par trigger hogi)
+        id: targetRoomId,
         advocateName: order.expertId?.name ? `Adv. ${order.expertId.name}` : "Unassigned Node",
         specialty: order.specialty || "Legal Consultation",
         lastMessageSnippet: snippet,
@@ -59,8 +61,6 @@ export async function GET() {
           minute: "2-digit",
           hour12: true
         }).toLowerCase(),
-        
-        // Telemetry drawer payload maps
         clientName: order.clientName || "Anonymous Client",
         clientAge: order.clientAge || 0,
         email: order.email || "No Email Provided",
@@ -74,7 +74,7 @@ export async function GET() {
 
     return NextResponse.json({ success: true, cases: formattedCases }, { status: 200 });
   } catch (error: any) {
-    console.error("Pipeline fetch error:", error);
+    console.error("Client cases fetch error:", error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }

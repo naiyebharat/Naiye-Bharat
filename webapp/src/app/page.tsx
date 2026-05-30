@@ -117,7 +117,7 @@ export default function Home() {
           </p>
 
           <div className="reveal-up flex flex-col sm:flex-row gap-6 relative">
-            <Link href="/billing" className="group relative overflow-hidden bg-gold-500 text-oxford-900 px-6 py-4 sm:px-12 sm:py-5 rounded-full font-bold tracking-widest uppercase transition-all shadow-gold hover:scale-105 active:scale-95 text-[10px] sm:text-base">
+            <Link href="/counseling" className="group relative overflow-hidden bg-gold-500 text-oxford-900 px-6 py-4 sm:px-12 sm:py-5 rounded-full font-bold tracking-widest uppercase transition-all shadow-gold hover:scale-105 active:scale-95 text-[10px] sm:text-base">
               <span className="relative z-10 transition-colors group-hover:text-white">Book Consultation</span>
               <div className="absolute inset-0 bg-oxford-800 transform translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
             </Link>

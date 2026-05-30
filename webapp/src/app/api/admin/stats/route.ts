@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {connectDB} from "@/utils/dbConnect"; 
 import Order from "@/utils/models/Order";
+import { withAuth } from "@/utils/withAuth";
 
 export const dynamic = "force-dynamic"; // Taaki live metrics calculate ho, cache na ho
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const auth = await withAuth(req, "admin");
+  if ("error" in auth) return auth.error;
   try {
     await connectDB();
 

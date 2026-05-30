@@ -16,6 +16,23 @@ export default function AdminDashboard() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [adminName, setAdminName] = useState<string>("System Admin");
+
+  // Fetch dynamic profile details on mount
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await fetch("/api/auth/me");
+        const data = await res.json();
+        if (data.success && data.user) {
+          setAdminName(data.user.name);
+        }
+      } catch (err) {
+        console.error("Profile Fetch Error:", err);
+      }
+    }
+    fetchProfile();
+  }, []);
 
   // Sync state layout adjustments directly into root HTML layers
   useEffect(() => {
@@ -45,7 +62,7 @@ export default function AdminDashboard() {
         
         {/* 🔥 Custom Admin Mainframe Header Integration */}
         <AdminHeader 
-          adminName="System Administrator"
+          adminName={adminName}
           toggleElement={
             <ThemeToggle 
               theme={isDarkMode ? "dark" : "light"} 

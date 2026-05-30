@@ -32,7 +32,7 @@ const AdvocateSchema = new Schema(
     },
     role: {
       type: String,
-      default: "lawyer", // 🔥 By default 'lawyer' role assign ho jayega authentication filter ke liye
+      default: "advocate", // 🔥 By default 'advocate' role assign ho jayega authentication filter ke liye
     },
   },
   { timestamps: true },

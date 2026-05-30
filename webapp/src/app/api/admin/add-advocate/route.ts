@@ -1,8 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { connectDB } from '@/utils/dbConnect'; 
-import Advocate from '@/utils/models/advocate'; 
+import Advocate from '@/utils/models/advocate';
+import { withAuth } from '@/utils/withAuth'; 
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+  const auth = await withAuth(request, "admin");
+  if ("error" in auth) return auth.error;
   try {
     // 1. Database Connection initialize karein
     await connectDB();
@@ -88,19 +91,22 @@ export async function POST(request: Request) {
 }
 
 // This api is returning all the experts from database
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const auth = await withAuth(req, "admin");
+  if ("error" in auth) return auth.error;
   try {
     // Database connection check
     await connectDB();
 
+    // 🔍 Filter lagaya hai taaki jiska role 'admin' ho wo neglect ho jaye
     // Latest experts ko sabse upar dikhane ke liye sort({ createdAt: -1 }) lagaya hai
-    const advocates = await Advocate.find({}).sort({ createdAt: -1 });
+    const advocates = await Advocate.find({ role: { $ne: "admin" } }).sort({ createdAt: -1 });
     
     return NextResponse.json(advocates, { status: 200 });
   } catch (error: any) {
     console.error("GET API Error:", error);
     return NextResponse.json(
-      { error: "Database se experts fetch karne mein error aaya." }, 
+      { error: "Error in getting advocates from database." }, 
       { status: 500 }
     );
   }

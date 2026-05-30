@@ -18,6 +18,22 @@ export default function AdvocateDashboardPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isLogoutOpen, setIsLogoutOpen] = useState(false);
   const [toast, setToast] = useState<ToastData>({ show: false, title: "", message: "", type: "info" });
+  const [advocateName, setAdvocateName] = useState<string>("Advocate");
+
+  // Fetch dynamic profile details on mount
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const res = await axios.get("/api/auth/me");
+        if (res.data.success && res.data.user) {
+          setAdvocateName(res.data.user.name);
+        }
+      } catch (err) {
+        console.error("Profile Fetch Error:", err);
+      }
+    }
+    fetchProfile();
+  }, []);
 
   // 🔥 Dynamic rooms from DB
   const [requests, setRequests] = useState<ClientRequest[]>([]);
@@ -96,11 +112,14 @@ export default function AdvocateDashboardPage() {
     setIsChatOpen(false);
   };
 
-  const handleConfirmLogout = () => {
-    setIsLogoutOpen(false);
-    triggerToast("Session Terminated", "You have logged out successfully.", "info");
-    setActiveClient(null);
-    setIsChatOpen(false);
+  const handleConfirmLogout = async () => {
+    try {
+      await axios.post("/api/auth/logout");
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("Logout failed:", err);
+      setIsLogoutOpen(false);
+    }
   };
 
   if (!theme) return <div className="min-h-screen w-full bg-[#050b1d]" />;
@@ -111,7 +130,7 @@ export default function AdvocateDashboardPage() {
       <LogoutModal isOpen={isLogoutOpen} onClose={() => setIsLogoutOpen(false)} onConfirm={handleConfirmLogout} />
 
       <ProfileHeader
-        advocateName="Adv. Aryan Jha"
+        advocateName={advocateName}
         onLogoutTrigger={() => setIsLogoutOpen(true)}
         toggleElement={<ThemeToggle theme={theme} onToggleTheme={handleToggleTheme} />}
       />

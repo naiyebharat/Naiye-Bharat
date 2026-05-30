@@ -11,32 +11,58 @@ interface Expert {
   _id: string;
   name: string;
   qualification: string;
-  practiceYears: number;
+  practiceYears?: number;
+  experience?: number;
   languages: string[];
   fee: number;
   pricing?: number;
-  avatar: string;
+  avatar?: string;
+  videoUrl?: string;
 }
 
 interface ExpertMatchesProps {
   orderId: string | null;
+  matchCriteria: { specialty: string; language: string } | null;
   onBack: () => void;
   onUnlock: (roomId: string) => void;
 }
 
-export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatchesProps) {
+interface CurrentUser {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock }: ExpertMatchesProps) {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [selectedExpert, setSelectedExpert] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [toast, setToast] = useState<ToastData>({ show: false, title: "", message: "", type: "info" });
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const showToast = (title: string, message: string, type: ToastData["type"]) => {
     setToast({ show: true, title, message, type });
   };
 
   const hideToast = () => setToast((prev) => ({ ...prev, show: false }));
+
+  // 🔐 Fetch current logged-in user on mount
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const res = await axios.get("/api/auth/me");
+        if (res.data.success && res.data.user) {
+          setCurrentUser(res.data.user);
+        }
+      } catch {
+        // Not logged in — currentUser stays null
+      }
+    }
+    fetchUser();
+  }, []);
 
   // 📦 Razorpay SDK Script Injector
   useEffect(() => {
@@ -51,14 +77,22 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
 
   useEffect(() => {
     async function fetchMatchedExperts() {
-      if (!orderId) {
+      if (!orderId && !matchCriteria) {
         setExperts([]);
         setLoading(false);
         return;
       }
       try {
         setLoading(true);
-        const response = await axios.get(`/api/experts?orderId=${orderId}`);
+        const params = new URLSearchParams();
+        if (orderId) {
+          params.set("orderId", orderId);
+        } else if (matchCriteria) {
+          params.set("specialty", matchCriteria.specialty);
+          params.set("language", matchCriteria.language);
+        }
+
+        const response = await axios.get(`/api/experts?${params.toString()}`);
         const result = response.data;
 
         if (result.success) {
@@ -79,17 +113,29 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
       }
     }
     fetchMatchedExperts();
-  }, [orderId]);
+  }, [orderId, matchCriteria]);
 
   const handleUnlockConnect = async (expert: Expert) => {
     if (checkoutLoading) return;
+
+    // 🔐 LOGIN CHECK — toast aur rokna agar login nahi hai
+    if (!currentUser) {
+      showToast(
+        "Login Required 🔐",
+        "Please login to your client account before booking a consultation.",
+        "error"
+      );
+      return;
+    }
+
     try {
       setCheckoutLoading(true);
 
-      // 1. Order Creation API
+      // 1. Order Creation API — real userId aur email bhej rahe hain
       const orderResponse = await axios.post("/api/payment/create-order", {
         orderId,
-        userId: "USER_DUMMY_123",
+        userId: currentUser.id,
+        email: currentUser.email,
         expertId: expert._id,
         pricing: expert.pricing || expert.fee || 699,
       });
@@ -123,10 +169,10 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
 
             const verifyData = verifyResponse.data;
             if (verifyData.success) {
-              showToast("Payment Successful 🎉", "Your session is verified. Redirecting to secure chat...", "success");
+              showToast("Payment Successful 🎉", "Your session is verified. Redirecting to your client panel...", "success");
               // Short delay so user sees the toast, then redirect
               setTimeout(() => {
-                onUnlock(verifyData.roomId);
+                window.location.href = "/client";
               }, 1500);
             } else {
               console.error("Verify API returned failure:", verifyData);
@@ -144,8 +190,8 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
           }
         },
         prefill: {
-          name: "Client User",
-          email: "user@naiyebharat.com",
+          name: currentUser?.name || "Client User",
+          email: currentUser?.email || "user@naiyebharat.com",
         },
         theme: { color: "#00c2a8" },
         modal: {
@@ -251,9 +297,9 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
                     }`}
                 >
                   <div className="flex flex-col sm:flex-row items-center gap-5 w-full md:w-auto text-center sm:text-left flex-grow">
-                    {expert.avatar && expert.avatar.length > 0 && !expert.avatar.includes("ui-avatars.com") ? (
+                    {(expert.avatar || expert.videoUrl) && (expert.avatar || expert.videoUrl).length > 0 && !(expert.avatar || expert.videoUrl).includes("ui-avatars.com") ? (
                       <img
-                        src={expert.avatar}
+                        src={expert.avatar || expert.videoUrl}
                         alt={expert.name}
                         className="w-20 h-20 sm:w-[72px] sm:h-[72px] rounded-xl object-cover border-[3px] border-slate-300 dark:border-slate-700/60 shadow-lg flex-shrink-0"
                       />
@@ -270,7 +316,7 @@ export default function ExpertMatches({ orderId, onBack, onUnlock }: ExpertMatch
                       </p>
                       <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-0.5">
                         <span className="bg-amber-100 dark:bg-amber-500/15 text-amber-800 dark:text-amber-300 text-[10px] font-extrabold px-2.5 py-1 rounded-md border border-amber-300 dark:border-amber-500/20">
-                          🎓 {expert.practiceYears || 5} Years Exp
+                          🎓 {expert.experience ?? expert.practiceYears ?? 5} Years Exp
                         </span>
                         <span className="bg-slate-200 dark:bg-slate-800/90 text-slate-700 dark:text-slate-300 text-[10px] font-extrabold px-2.5 py-1 rounded-md flex items-center gap-1 border border-slate-400 dark:border-slate-700/50">
                           <Languages className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" /> {(expert?.language || expert.languages || []).join(", ") || "Hindi"}

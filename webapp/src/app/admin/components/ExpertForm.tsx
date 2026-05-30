@@ -267,10 +267,21 @@ export default function ExpertForm({
                 {...formik.getFieldProps("specialty")}
                 className="w-full bg-slate-50/50 dark:bg-[#050b1d] border border-slate-200 dark:border-slate-800/80 rounded-lg px-3 py-1.5 text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:border-emerald-500 dark:focus:border-[#00c2a8] focus:ring-2 focus:ring-emerald-500/10 dark:focus:ring-0 transition-all duration-200 font-semibold"
               >
-                <option value="Legal Support">General Legal Support</option>
-                <option value="Corporate Law">Corporate Law & Tech</option>
-                <option value="Criminal Defense">Criminal Defense</option>
+                <option value="Civil">Civil</option>
+                <option value="Criminal">Criminal</option>
                 <option value="Family Law">Family Law</option>
+                <option value="Corporate Law">Corporate Law</option>
+                <option value="Property Dispute">Property Dispute</option>
+                <option value="Court Marriage">Court Marriage</option>
+                <option value="Pre-Legal Counselling">
+                  Pre-Legal Counselling
+                </option>
+                <option value="Post Legal Counselling">
+                  Post Legal Counselling
+                </option>
+                <option value="Adult Counselling">Adult Counselling</option>
+                <option value="Teen Counselling">Teen Counselling</option>
+                <option value="Victims Support">Victims Support</option>
               </select>
             </div>
           </motion.div>

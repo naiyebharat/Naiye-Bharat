@@ -1,23 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
-import { Scale, LogOut, ChevronDown, ShieldCheck } from "lucide-react";
+import { Scale, LogOut, ChevronDown, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ProfileHeaderProps {
   advocateName: string;
-  onLogoutTrigger: () => void;
+  onLogoutTrigger: () => void | Promise<void>; 
   toggleElement: React.ReactNode; 
 }
 
 export default function ProfileHeader({ advocateName = "Advocate", onLogoutTrigger, toggleElement }: ProfileHeaderProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  
   const safeName = advocateName || "Advocate";
   const initials = safeName.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
 
   // 🖱️ Desktop Handlers (Hover Events)
   const handleMouseEnter = () => {
-    if (window.innerWidth >= 768) setIsDropdownOpen(true);
+    if (window.innerWidth >= 768 && !isLoggingOut) setIsDropdownOpen(true);
   };
 
   const handleMouseLeave = () => {
@@ -26,7 +28,19 @@ export default function ProfileHeader({ advocateName = "Advocate", onLogoutTrigg
 
   // 📱 Mobile Handler (Click Toggle)
   const handleAvatarClick = () => {
-    if (window.innerWidth < 768) setIsDropdownOpen((prev) => !prev);
+    if (window.innerWidth < 768 && !isLoggingOut) setIsDropdownOpen((prev) => !prev);
+  };
+
+  // 🚀 Core Logout Interceptor Engine
+  const handleLogoutClick = async () => {
+    setIsDropdownOpen(false);
+    setIsLoggingOut(true);
+    try {
+      await onLogoutTrigger();
+    } catch (err) {
+      console.error("Logout propagation failed:", err);
+      setIsLoggingOut(false); // Fallback configuration reset if cancel/network drops
+    }
   };
 
   return (
@@ -60,17 +74,22 @@ export default function ProfileHeader({ advocateName = "Advocate", onLogoutTrigg
           {/* Trigger Node Anchor */}
           <button
             onClick={handleAvatarClick}
-            className="flex items-center gap-2.5 cursor-pointer group focus:outline-none"
+            disabled={isLoggingOut}
+            className="flex items-center gap-2.5 cursor-pointer group focus:outline-none disabled:opacity-70 disabled:cursor-not-allowed"
             type="button"
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-black shadow-inner ring-2 ring-transparent group-hover:ring-indigo-500/30 dark:group-hover:ring-[#00c2a8]/30 transition-all">
-              {initials}
+              {isLoggingOut ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-white" />
+              ) : (
+                initials
+              )}
             </div>
             
             <div className="hidden md:block text-left">
               <h4 className="text-xs font-black text-slate-900 dark:text-white leading-tight flex items-center gap-1">
                 {safeName}
-                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`} />
+                <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""} ${isLoggingOut ? "opacity-0" : ""}`} />
               </h4>
               <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500">Verified Counsel</p>
             </div>
@@ -78,7 +97,7 @@ export default function ProfileHeader({ advocateName = "Advocate", onLogoutTrigg
 
           {/* 🪟 Animated Floating Dropdown Menu Menu */}
           <AnimatePresence>
-            {isDropdownOpen && (
+            {isDropdownOpen && !isLoggingOut && (
               <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -92,17 +111,10 @@ export default function ProfileHeader({ advocateName = "Advocate", onLogoutTrigg
                   <p className="text-[9px] font-medium text-slate-400 dark:text-slate-500">Legal Counsel</p>
                 </div>
 
-                {/* <div className="flex items-center gap-2 px-2.5 py-1.5 text-[11px] font-bold text-emerald-600 dark:text-[#00c2a8] bg-emerald-50/50 dark:bg-emerald-950/10 rounded-lg mb-1">
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Node Secure Active</span>
-                </div> */}
-
                 {/* 🚨 Logout Option Action Anchor */}
                 <button
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    onLogoutTrigger();
-                  }}
+                  type="button"
+                  onClick={handleLogoutClick}
                   className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-left text-xs font-bold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5" />
