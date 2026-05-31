@@ -168,7 +168,7 @@ export default function Home() {
                 name: "Adv. Ranvijay Singh",
                 specialty: "Legal Documentation & Compliance",
                 experience: "5+ Years Experience",
-                image: "/img/adv-ranvijay-singh.jpeg"
+                image: "/img/adv-ranvijay-singh.jpg"
               },
               {
                 name: "Adv. Sharda Singh",
