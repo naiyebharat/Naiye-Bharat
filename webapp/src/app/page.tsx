@@ -392,3 +392,4 @@ function ReviewCard({ name, handle, date, text, img }: Review) {
     </div>
   );
 }
+
