@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import ThemeToggle from "@/app/advocate/components/ThemeToggle";
 import Toast, { ToastData } from "@/app/advocate/components/Toast";
+import GoogleButton from "./GoogleButton"; // ← Import kiya
 
 interface SignUpFormProps {
   onSwitchToLogin: () => void;
@@ -53,7 +54,6 @@ export default function SignUpForm({ onSwitchToLogin, theme, onToggleTheme }: Si
             setIsOtpStep(true);
           }
         } else {
-          // Step 1: Verify OTP
           const verifyResponse = await axios.post("/api/auth/signup", {
             action: "verify-otp",
             name: values.name,
@@ -63,7 +63,6 @@ export default function SignUpForm({ onSwitchToLogin, theme, onToggleTheme }: Si
           });
 
           if (verifyResponse.data.success) {
-            // Step 2: Auto-login to set session cookie and get redirect URL
             showToast("Email Verified! 🎉", "Logging you into your dashboard...", "success");
 
             try {
@@ -73,14 +72,14 @@ export default function SignUpForm({ onSwitchToLogin, theme, onToggleTheme }: Si
               });
 
               if (loginResponse.data.success) {
-                setTimeout(() => { window.location.href = loginResponse.data.redirect; }, 1200);
+                setTimeout(() => { window.location.href = loginResponse.data.redirect; }, 500);
               } else {
                 showToast("Almost Done!", "Account verified. Please login now.", "info");
-                setTimeout(() => { window.location.href = "/login"; }, 1500);
+                setTimeout(() => { window.location.href = "/login"; }, 500);
               }
             } catch {
               showToast("Almost Done!", "Account verified. Please login now.", "info");
-              setTimeout(() => { window.location.href = "/login"; }, 1500);
+              setTimeout(() => { window.location.href = "/login"; }, 500);
             }
           }
         }
@@ -98,7 +97,7 @@ export default function SignUpForm({ onSwitchToLogin, theme, onToggleTheme }: Si
       <Toast toast={toast} onClose={() => setToast((t) => ({ ...t, show: false }))} />
     <div className="w-full bg-white dark:bg-[#0d1527] rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] dark:shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-slate-300 dark:border-slate-800/70 overflow-hidden transition-all duration-300">
 
-      {/* Header — Logo left, Toggle right */}
+      {/* Header */}
       <div className="pt-8 pb-4 px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-xl bg-slate-950 dark:bg-[#00c2a8] flex items-center justify-center shadow-md shrink-0">
@@ -270,6 +269,28 @@ export default function SignUpForm({ onSwitchToLogin, theme, onToggleTheme }: Si
             isOtpStep ? "Verify Code" : "Request Verification Code"
           )}
         </button>
+
+        {/* ─── DIVIDER & GOOGLE BUTTON ONLY ON FIRST STEP ─── */}
+        {!isOtpStep && (
+          <>
+            <div className="relative flex items-center justify-center my-2 pt-1">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-slate-200 dark:border-slate-800/80"></div>
+              </div>
+              <span className="relative px-3 bg-white dark:bg-[#0d1527] text-[10px] uppercase tracking-widest text-slate-400 dark:text-slate-500 font-extrabold transition-colors">
+                Or continue with
+              </span>
+            </div>
+
+            <GoogleButton 
+              theme={theme} 
+              showToast={showToast} 
+              setServerError={setServerError} 
+            />
+          </>
+        )}
+        {/* ─── DIVIDER & GOOGLE BUTTON END ─── */}
+
       </form>
 
       {/* Footer */}

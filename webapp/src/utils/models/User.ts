@@ -6,12 +6,13 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;
+  googleId?: string; // ← New Field
   role: UserRole;
   isVerified: boolean;
   avatar?: string;
   otp?: string;
   otpExpiry?: Date;
-  deleteAt?: Date; // TTL index — 10 min baad auto delete
+  deleteAt?: Date; 
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,8 +37,16 @@ const UserSchema: Schema<IUser> = new Schema(
     },
     password: {
       type: String,
-      required: [true, "Password is required."],
+      // ↓ Ab password sirf tabhi required hoga jab user normal register karega (GoogleId nahi hogi)
+      required: function (this: any) {
+        return !this.googleId;
+      },
       select: false,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // ← Yeh zaroori hai taaki normal users ke null hone par unique error na aaye
     },
     role: {
       type: String,
@@ -52,7 +61,6 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       default: "",
     },
-    // OTP fields
     otp: {
       type: String,
       select: false,
@@ -61,11 +69,9 @@ const UserSchema: Schema<IUser> = new Schema(
       type: Date,
       select: false,
     },
-    // TTL field — MongoDB isko 10 min baad automatically delete karega
-    // Jab user verify ho jaye toh ise undefined kar do (permanent ban jayega)
     deleteAt: {
       type: Date,
-      expires: 0, // deleteAt ki value pe exactly expire karo
+      expires: 0,
       default: undefined,
     },
   },

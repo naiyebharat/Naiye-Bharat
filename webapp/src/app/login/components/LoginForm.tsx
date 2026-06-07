@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import ThemeToggle from "@/app/advocate/components/ThemeToggle";
 import Toast, { ToastData } from "@/app/advocate/components/Toast";
+import GoogleButton from "./GoogleButton"; // ← Import kiya
 
 interface LoginFormProps {
   onSwitchToSignUp: () => void;
@@ -62,7 +63,7 @@ export default function LoginForm({ onSwitchToSignUp, onSwitchToForgot, theme, o
       <Toast toast={toast} onClose={() => setToast((t) => ({ ...t, show: false }))} />
     <div className="w-full bg-white dark:bg-[#0d1527] rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] dark:shadow-[0_30px_70px_rgba(0,0,0,0.5)] border border-slate-300 dark:border-slate-800/70 overflow-hidden transition-all duration-300">
 
-      {/* Header — Logo left, Toggle right — ek hi line mein */}
+      {/* Header */}
       <div className="pt-8 pb-4 px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-11 h-11 rounded-xl bg-slate-950 dark:bg-[#00c2a8] flex items-center justify-center shadow-md shrink-0">
@@ -124,9 +125,18 @@ export default function LoginForm({ onSwitchToSignUp, onSwitchToForgot, theme, o
 
         {/* Password */}
         <div className="space-y-1.5">
-          <label className="text-[10px] uppercase tracking-widest text-slate-700 dark:text-slate-400 font-extrabold ml-1">
-            Password
-          </label>
+          <div className="flex justify-between items-center px-1">
+            <label className="text-[10px] uppercase tracking-widest text-slate-700 dark:text-slate-400 font-extrabold">
+              Password
+            </label>
+            <button
+              type="button"
+              onClick={onSwitchToForgot}
+              className="text-[10px] uppercase tracking-widest text-slate-500 hover:text-amber-600 dark:hover:text-[#00c2a8] font-extrabold transition-colors cursor-pointer"
+            >
+              Forgot?
+            </button>
+          </div>
           <div className={`relative flex items-center group rounded-xl border transition-all ${
             formik.touched.password && formik.errors.password
               ? 'border-red-500 ring-2 ring-red-500/10'
@@ -169,6 +179,24 @@ export default function LoginForm({ onSwitchToSignUp, onSwitchToForgot, theme, o
             "Login"
           )}
         </button>
+
+        {/* ─── DIVIDER & GOOGLE BUTTON START ─── */}
+        <div className="relative flex items-center justify-center my-2 py-1">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-400 dark:border-slate-800/80"></div>
+          </div>
+          <span className="relative px-3 bg-white dark:bg-[#0d1527] text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-500 font-extrabold transition-colors">
+            Or continue with
+          </span>
+        </div>  
+
+        <GoogleButton 
+          theme={theme} 
+          showToast={showToast} 
+          setServerError={setServerError} 
+        />
+        {/* ─── DIVIDER & GOOGLE BUTTON END ─── */}
+
       </form>
 
       {/* Footer */}
