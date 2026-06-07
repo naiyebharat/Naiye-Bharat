@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import GlobalSOS from "@/components/GlobalSOS";
+import AdminBypass from "@/components/AdminBypass"; // <-- Naya wrapper import kiya
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
@@ -31,10 +29,12 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-slate-50 flex flex-col min-h-screen text-slate-800 font-sans selection:bg-gold/30 selection:text-oxford">
-        <Navbar />
-        {children}
-        <GlobalSOS />
-        <Footer />
+        
+        {/* Dynamic Wrapper handles UI visibility dynamically based on router paths */}
+        <AdminBypass>
+          {children}
+        </AdminBypass>
+
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>
