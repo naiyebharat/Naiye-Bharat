@@ -3,7 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import AdminBypass from "@/components/AdminBypass"; // <-- Naya wrapper import kiya
 import "./globals.css";
-
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: '--font-playfair' });
 
@@ -27,14 +28,17 @@ export default function RootLayout({
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
+        
       </head>
       <body className="bg-slate-50 flex flex-col min-h-screen text-slate-800 font-sans selection:bg-gold/30 selection:text-oxford">
         
         {/* Dynamic Wrapper handles UI visibility dynamically based on router paths */}
+          <Navbar />
         <AdminBypass>
           {children}
         </AdminBypass>
-
+          <Footer />
+       
         <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       </body>
     </html>
