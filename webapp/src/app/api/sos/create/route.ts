@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/utils/dbConnect";
+import { connectDB } from "@/utils/dbConnect";
 import SOSRequest from "@/utils/models/SOSRequest";
 import { pusher } from "@/utils/libs/pusher";
 
 export async function POST(req: Request) {
   try {
-    await dbConnect();
+    await connectDB();
 
     const body = await req.json();
 
