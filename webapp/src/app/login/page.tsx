@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import LoginForm from "./components/LoginForm";
 import SignUpForm from "./components/SignUpForm";
 import { seededRandom } from "@/utils/random";
@@ -8,6 +8,21 @@ import { seededRandom } from "@/utils/random";
 export default function LoginPage() {
   const [viewState, setViewState] = useState<"login" | "signup" | "forgot">("login");
   const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("nb_theme") as "light" | "dark" | null;
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+    localStorage.setItem("nb_theme", theme);
+  }, [theme]);
 
   const handleToggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -34,7 +49,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form Container */}
-        <div className="relative z-10 w-full max-w-[500px]">
+        <div className="relative z-10 w-full max-w-[540px]">
 
           {viewState === "login" && (
             <LoginForm

@@ -44,7 +44,7 @@ export default function ClientPortal() {
 
   // Theme LocalStorage Sync Engine
   useEffect(() => {
-    const savedTheme = localStorage.getItem("client-portal-theme") as "light" | "dark" | null;
+    const savedTheme = localStorage.getItem("nb_theme") as "light" | "dark" | null;
     if (savedTheme) setTheme(savedTheme);
   }, []);
 
@@ -52,7 +52,7 @@ export default function ClientPortal() {
     const root = window.document.documentElement;
     if (theme === "dark") root.classList.add("dark");
     else root.classList.remove("dark");
-    localStorage.setItem("client-portal-theme", theme);
+    localStorage.setItem("nb_theme", theme);
   }, [theme]);
 
   // 🔄 POLLING ENGINE A: Fetch Cases Pipeline (4 Seconds Loop)

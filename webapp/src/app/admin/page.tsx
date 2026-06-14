@@ -36,11 +36,18 @@ export default function AdminDashboard() {
 
   // Sync state layout adjustments directly into root HTML layers
   useEffect(() => {
+    const savedTheme = localStorage.getItem("nb_theme");
+    setIsDarkMode(savedTheme === "dark");
+  }, []);
+
+  useEffect(() => {
     const root = window.document.documentElement;
     if (isDarkMode) {
       root.classList.add('dark');
+      localStorage.setItem("nb_theme", "dark");
     } else {
       root.classList.remove('dark');
+      localStorage.setItem("nb_theme", "light");
     }
   }, [isDarkMode]);
 

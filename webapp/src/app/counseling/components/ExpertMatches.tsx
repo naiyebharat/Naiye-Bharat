@@ -1,11 +1,12 @@
 // @ts-nocheck
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Scale, ShieldCheck, Languages, GraduationCap, ArrowRight, ArrowLeft } from "lucide-react";
 import axios from "axios";
 import Toast, { ToastData } from "@/app/advocate/components/Toast";
+import LoginModal from "./LoginModal";
 
 interface Expert {
   _id: string;
@@ -42,6 +43,9 @@ export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [toast, setToast] = useState<ToastData>({ show: false, title: "", message: "", type: "info" });
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  // Store the expert user was trying to unlock before they logged in
+  const pendingExpertRef = useRef<Expert | null>(null);
 
   const showToast = (title: string, message: string, type: ToastData["type"]) => {
     setToast({ show: true, title, message, type });
@@ -115,16 +119,34 @@ export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock
     fetchMatchedExperts();
   }, [orderId, matchCriteria]);
 
-  const handleUnlockConnect = async (expert: Expert) => {
+  // Called after user logs in via the modal — triggers payment for pending expert
+  const handleModalLoginSuccess = (user: CurrentUser) => {
+    setCurrentUser(user);
+    setShowLoginModal(false);
+    // Auto-trigger payment for the expert user was trying to unlock
+    if (pendingExpertRef.current) {
+      const expert = pendingExpertRef.current;
+      pendingExpertRef.current = null;
+      // Small delay so modal closes smoothly before Razorpay opens
+      setTimeout(() => handleUnlockConnect(expert, user), 350);
+    }
+  };
+
+  const handleUnlockConnect = async (expert: Expert, loggedInUser?: CurrentUser) => {
     if (checkoutLoading) return;
 
-    // 🔐 LOGIN CHECK — toast aur rokna agar login nahi hai
-    if (!currentUser) {
+    // Use freshly passed user (from modal login) or state user
+    const activeUser = loggedInUser ?? currentUser;
+
+    // 🔐 LOGIN CHECK — toast + modal popup agar login nahi hai
+    if (!activeUser) {
+      pendingExpertRef.current = expert;
       showToast(
         "Login Required 🔐",
         "Please login to your client account before booking a consultation.",
         "error"
       );
+      setShowLoginModal(true);
       return;
     }
 
@@ -134,8 +156,8 @@ export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock
       // 1. Order Creation API — real userId aur email bhej rahe hain
       const orderResponse = await axios.post("/api/payment/create-order", {
         orderId,
-        userId: currentUser.id,
-        email: currentUser.email,
+        userId: activeUser.id,
+        email: activeUser.email,
         expertId: expert._id,
         pricing: expert.pricing || expert.fee || 699,
       });
@@ -190,8 +212,8 @@ export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock
           }
         },
         prefill: {
-          name: currentUser?.name || "Client User",
-          email: currentUser?.email || "user@naiyebharat.com",
+          name: activeUser?.name || "Client User",
+          email: activeUser?.email || "user@naiyebharat.com",
         },
         theme: { color: "#00c2a8" },
         modal: {
@@ -224,6 +246,16 @@ export default function ExpertMatches({ orderId, matchCriteria, onBack, onUnlock
     <>
       {/* Global Toast — always on top */}
       <Toast toast={toast} onClose={hideToast} />
+
+      {/* Login Modal — appears when user clicks Unlock Chat without being logged in */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => {
+          setShowLoginModal(false);
+          pendingExpertRef.current = null;
+        }}
+        onLoginSuccess={handleModalLoginSuccess}
+      />
 
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="min-h-screen w-full bg-slate-50 dark:bg-[#050b1d] py-6 px-6 lg:px-12 flex flex-col justify-between">
         <div className="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center">

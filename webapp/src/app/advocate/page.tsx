@@ -41,8 +41,8 @@ export default function AdvocateDashboardPage() {
 
   // Theme init
   useEffect(() => {
-    const savedTheme = localStorage.getItem("nb_advocate_theme") as "light" | "dark" | null;
-    const initialTheme = savedTheme || "dark";
+    const savedTheme = localStorage.getItem("nb_theme") as "light" | "dark" | null;
+    const initialTheme = savedTheme || "light";
     setTheme(initialTheme);
     if (initialTheme === "dark") document.documentElement.classList.add("dark");
     else document.documentElement.classList.remove("dark");
@@ -52,7 +52,7 @@ export default function AdvocateDashboardPage() {
     if (!theme) return;
     const nextTheme = theme === "light" ? "dark" : "light";
     setTheme(nextTheme);
-    localStorage.setItem("nb_advocate_theme", nextTheme);
+    localStorage.setItem("nb_theme", nextTheme);
     if (nextTheme === "dark") document.documentElement.classList.add("dark");
     else document.documentElement.classList.remove("dark");
   };

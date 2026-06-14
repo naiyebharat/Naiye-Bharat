@@ -8,8 +8,6 @@ const JWT_SECRET = process.env.JWT_SECRET || "SUPER_SECRET_PIPELINE_KEY_9999";
 
 export async function GET(req: NextRequest) {
   try {
-    await connectDB();
-
     const clientToken   = req.cookies.get("client_auth_token")?.value;
     const advocateToken = req.cookies.get("advocate_auth_token")?.value;
     const adminToken    = req.cookies.get("admin_auth_token")?.value;
@@ -22,6 +20,8 @@ export async function GET(req: NextRequest) {
         { status: 401 }
       );
     }
+
+    await connectDB();
 
     const decoded = jwt.verify(token, JWT_SECRET) as any;
     

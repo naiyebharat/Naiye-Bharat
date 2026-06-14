@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import IntakeForm from "./components/IntakeForm";
 import ExpertMatches from "./components/ExpertMatches";
 import SecureChat from "./components/SecureChat";
+import { ArrowLeft } from "lucide-react";
 
 type MatchCriteria = {
   specialty: string;
@@ -80,6 +81,20 @@ export default function CounselingPage() {
 
   return (
     <main className="min-h-screen bg-slate-50 dark:bg-[#050b1d] transition-colors duration-300">
+
+      {/* Back Button — normal flow, not absolute */}
+      {activeStep !== 3 && (
+        <div className="px-6 pt-6">
+          <button
+            onClick={() => window.location.href = "/"}
+            className="flex items-center gap-2 px-4 py-2 text-xs font-black text-slate-700 dark:text-slate-300 bg-white dark:bg-[#0b1329] hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl shadow-md transition-all cursor-pointer hover:-translate-x-1 duration-200"
+          >
+            <ArrowLeft className="w-4 h-4 text-emerald-600 dark:text-[#00c2a8]" />
+            <span className="uppercase tracking-wider">Back to Home</span>
+          </button>
+        </div>
+      )}
+
       {activeStep === 1 && (
         <IntakeForm
           onSuccess={(orderId, criteria) => handleStepTransition(2, orderId, null, criteria)}

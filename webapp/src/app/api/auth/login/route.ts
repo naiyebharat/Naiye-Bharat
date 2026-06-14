@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const body = await req.json();
-    const { email, password } = body;
+    const { email, password, redirectTo } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -73,7 +73,16 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Token + Redirect config based on role ─────────────
-    if (designatedRole === "admin") {
+    if (redirectTo) {
+      redirectPath = redirectTo;
+      if (designatedRole === "admin") {
+        tokenName = "admin_auth_token";
+      } else if (designatedRole === "advocate") {
+        tokenName = "advocate_auth_token";
+      } else {
+        tokenName = "client_auth_token";
+      }
+    } else if (designatedRole === "admin") {
       tokenName = "admin_auth_token";
       redirectPath = "/admin";
     } else if (designatedRole === "advocate") {

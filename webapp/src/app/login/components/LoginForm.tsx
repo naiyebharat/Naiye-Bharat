@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Scale, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Scale, Mail, Lock, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -40,12 +40,14 @@ export default function LoginForm({ onSwitchToSignUp, onSwitchToForgot, theme, o
     onSubmit: async (values, { setSubmitting }) => {
       setServerError("");
       try {
+        const redirectTo = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("redirectTo") : "";
         const response = await axios.post("/api/auth/login", {
           email: values.email,
           password: values.password,
+          redirectTo: redirectTo || undefined,
         });
         if (response.data.success) {
-          showToast("Welcome Back! 👋", "Redirecting to your dashboard...", "success");
+          showToast("Welcome Back! 👋", "Redirecting...", "success");
           setTimeout(() => { window.location.href = response.data.redirect; }, 1000);
         }
       } catch (error: any) {
@@ -66,6 +68,14 @@ export default function LoginForm({ onSwitchToSignUp, onSwitchToForgot, theme, o
       {/* Header */}
       <div className="pt-8 pb-4 px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
+          <button 
+            type="button"
+            onClick={() => window.location.href = "/"}
+            className="p-2 -ml-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer mr-0.5"
+            title="Go to Home"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
           <div className="w-11 h-11 rounded-xl bg-slate-950 dark:bg-[#00c2a8] flex items-center justify-center shadow-md shrink-0">
             <Scale className="w-5 h-5 text-white dark:text-[#050b1d]" />
           </div>
