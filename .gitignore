@@ -4,3 +4,7 @@ webapp/.env*.local
 webapp/out
 *.log
 .DS_Store
+.env
+.env.l
+
+ 

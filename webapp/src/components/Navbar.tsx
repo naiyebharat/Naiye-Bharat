@@ -1,187 +1,182 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import Image from "next/image";
+import { useCallback, useEffect } from "react";
+
+function LogoSVG() {
+  return (
+    <svg viewBox="0 0 100 100" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" fill="#1a1a1a" stroke="#d4af37" strokeWidth="2" />
+      <circle cx="50" cy="50" r="42" fill="none" stroke="#d4af37" strokeWidth="1" strokeDasharray="3,2" />
+      <rect x="47" y="25" width="6" height="45" fill="#d4af37" />
+      <rect x="40" y="65" width="20" height="8" rx="4" fill="#d4af37" />
+      <rect x="44" y="20" width="12" height="6" rx="3" fill="#d4af37" />
+      <rect x="30" y="35" width="40" height="3" fill="#d4af37" />
+      <circle cx="38" cy="40" r="2" fill="#d4af37" />
+      <line x1="38" y1="42" x2="38" y2="55" stroke="#d4af37" strokeWidth="1" />
+      <line x1="38" y1="42" x2="32" y2="48" stroke="#d4af37" strokeWidth="1" />
+      <line x1="38" y1="42" x2="44" y2="48" stroke="#d4af37" strokeWidth="1" />
+      <path d="M 30 48 Q 38 55 46 48 L 46 52 Q 38 59 30 52 Z" fill="#d4af37" />
+      <circle cx="62" cy="40" r="2" fill="#d4af37" />
+      <line x1="62" y1="42" x2="62" y2="55" stroke="#d4af37" strokeWidth="1" />
+      <line x1="62" y1="42" x2="56" y2="48" stroke="#d4af37" strokeWidth="1" />
+      <line x1="62" y1="42" x2="68" y2="48" stroke="#d4af37" strokeWidth="1" />
+      <path d="M 54 48 Q 62 55 70 48 L 70 52 Q 62 59 54 52 Z" fill="#d4af37" />
+    </svg>
+  );
+}
 
 export default function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
-  // Handle Body Lock and Close menu on route change
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
+    const btn = document.getElementById("mobile-menu-button");
+    const menu = document.getElementById("mobile-menu");
+    const servicesBtn = document.getElementById("mobile-services-btn");
+    const servicesMenu = document.getElementById("mobile-services-menu") as HTMLElement | null;
+
+    const toggleMenu = () => menu?.classList.toggle("hidden");
+    btn?.addEventListener("click", toggleMenu);
+
+    const toggleServices = () => {
+      if (!servicesMenu) return;
+      const isOpen = servicesMenu.style.maxHeight !== "0px" && servicesMenu.style.maxHeight !== "";
+      servicesMenu.style.maxHeight = isOpen ? "0px" : "200px";
+      const svg = servicesBtn?.querySelector("svg") as HTMLElement | null;
+      if (svg) svg.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
     };
-  }, [mobileMenuOpen]);
+    servicesBtn?.addEventListener("click", toggleServices);
 
-
+    return () => {
+      btn?.removeEventListener("click", toggleMenu);
+      servicesBtn?.removeEventListener("click", toggleServices);
+    };
+  }, []);
 
   return (
-    <nav className="bg-white border-b border-slate-100 sticky top-0 z-50 transition-all duration-500 shadow-sm" id="navbar">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-        <div className="flex items-center h-24 justify-between">
-          
-          {/* Mobile hamburger left */}
-          <div className="flex xl:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-oxford-800 hover:text-gold-500 focus:outline-none transition-colors p-3 rounded-xl hover:bg-slate-100/50"
-            >
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 8h16M4 16h16"} />
-              </svg>
-            </button>
-          </div>
+    <>
+      <style>{`
+        @keyframes spin-once { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .rotate-once { animation: spin-once 2s ease-in-out 1; }
+        @keyframes logoGlow {
+          0%   { filter: drop-shadow(0 0 0px  rgba(212,175,55,0)); }
+          50%  { filter: drop-shadow(0 0 15px rgba(212,175,55,0.8)); }
+          100% { filter: drop-shadow(0 0 8px  rgba(212,175,55,0.4)); }
+        }
+        .animate-logo-glow { animation: logoGlow 2s ease-in-out 0.5s both; }
+        @keyframes emergeFromLogo {
+          0%   { opacity: 0; transform: scale(0)   translateX(-50px); filter: blur(10px); }
+          50%  { opacity: 0.5; transform: scale(0.8) translateX(-20px); filter: blur(5px); }
+          100% { opacity: 1; transform: scale(1)   translateX(0); filter: blur(0); }
+        }
+        .animate-emerge { animation: emergeFromLogo 1.5s ease-out 0.8s both; }
+        @keyframes shine {
+          0%   { background-position: 0% 50%; }
+          50%  { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+        .button-bg {
+          background: conic-gradient(from 0deg, #00F5FF, #000, #000, #00F5FF, #000, #000, #000, #00F5FF);
+          background-size: 300% 300%;
+          animation: shine 6s ease-out infinite;
+        }
+        .navbar-scrolled {
+          background-color: rgba(255,255,255,0.95) !important;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .navbar-scrolled .nav-link { color: #374151; }
+        .navbar-scrolled .nav-link:hover { color: #3b82f6; }
+      `}</style>
 
-          {/* Logo and Brand Name */}
-          <div className="flex-1 flex justify-center xl:justify-start">
-            <div className="flex items-center space-x-6">
-              <Link 
-                href="/" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center space-x-2 sm:space-x-4 group cursor-pointer"
-              >
-                <div className="w-10 h-10 sm:w-14 sm:h-14 relative transition-transform duration-500 group-hover:scale-110">
-                  <div className="absolute inset-0 bg-gold-500 blur-2xl opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                  <Image 
-                    src="/img/logo.png" 
-                    alt="NaiyeBharat Logo" 
-                    width={56} 
-                    height={56} 
-                    className="w-full h-full object-contain relative z-10" 
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl sm:text-2xl font-serif font-bold text-oxford-900 tracking-tight flex items-baseline leading-none">
-                    Naiye<span className="text-gold-500">Bharat</span>
-                  </span>
-                  <span className="text-[8px] font-bold uppercase tracking-[0.4em] text-slate-400 mt-1">Justice & Integrity</span>
-                </div>
-              </Link>
-            </div>
-          </div>
+      <nav id="navbar" className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center h-16 justify-between">
 
-          {/* Desktop menu */}
-          <div className="hidden xl:flex xl:items-center space-x-10">
-            {[
-              { name: "Home", path: "/" },
-              { name: "About Us", path: "/about" },
-              { name: "Pricing", path: "/pricing" }
-            ].map((link) => (
-              <Link key={link.path} href={link.path} className="text-oxford-700 hover:text-oxford-900 font-bold tracking-widest transition-all relative group text-[11px] uppercase">
-                {link.name}
-                <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-              </Link>
-            ))}
-
-            <div className="relative group py-6">
-              <div className="text-oxford-700 hover:text-oxford-900 font-bold tracking-widest flex items-center transition-all text-[11px] uppercase cursor-pointer">
-                Practice Areas
-                <svg className="w-3 h-3 ml-2 mt-0.5 transition-transform duration-300 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
-              </div>
-              <div className="absolute left-1/2 transform -translate-x-1/2 top-[100%] mt-2 w-72 glass-panel border border-slate-100 shadow-oxford rounded-3xl py-4 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 origin-top group-hover:translate-y-0 -translate-y-4">
-                {["Civil", "Criminal", "Corporate", "Family", "Property", "Court Marriage"].map((item) => (
-                  <Link 
-                    key={item} 
-                    href={`/services/${item.toLowerCase().replace(/\s+/g, '-')}`} 
-                    className="block px-8 py-3 text-[12px] font-bold uppercase tracking-wider text-oxford-700 hover:text-gold-600 transition-colors border-l-4 border-transparent hover:border-gold-500 hover:bg-slate-50/50"
-                  >
-                    {item} Law
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <Link href="/counselling" className="text-gold-600 hover:text-gold-700 font-bold tracking-widest transition-all relative group text-[11px] uppercase">
-              Counselling
-              <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-gold-600 transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </Link>
-
-            <Link href="/#Contact" className="text-oxford-700 hover:text-oxford-900 font-bold tracking-widest transition-all relative group text-[11px] uppercase">
-              Contact
-              <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-gold-500 transition-all duration-300 group-hover:w-full group-hover:left-0"></span>
-            </Link>
-            
-            <Link href="/login" className="group relative ml-4 px-8 py-3 bg-oxford-900 text-gold-400 border border-gold-500/20 rounded-2xl font-bold tracking-[0.2em] transition-all duration-500 shadow-xl hover:shadow-gold-500/10 text-[10px] uppercase overflow-hidden hover:scale-105 active:scale-95">
-              <span className="relative z-10 transition-colors group-hover:text-oxford-900">Client Portal</span>
-              <div className="absolute inset-0 bg-gold-500 transform translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></div>
-            </Link>
-          </div>
-        </div>
-
-        {/* Mobile Menu - Redesigned slide-down from top with scroll */}
-        <div 
-          className={`xl:hidden fixed left-0 right-0 top-24 bg-white shadow-2xl transition-all duration-500 ease-in-out border-t border-slate-100 rounded-b-[40px] overflow-y-auto z-40 ${
-            mobileMenuOpen ? "max-h-[calc(100vh-6rem)] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
-          }`}
-        >
-          <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-12 space-y-2">
-            {[
-              { name: "Home", path: "/" },
-              { name: "About Us", path: "/about" },
-              { name: "Pricing", path: "/pricing" },
-              { name: "Counselling", path: "/counselling", highlight: true },
-              { name: "Contact", path: "/#Contact" }
-            ].map((link) => (
-              <Link 
-                key={link.path} 
-                href={link.path} 
-                onClick={() => setMobileMenuOpen(false)}
-                className={`block font-bold py-4 transition-all px-4 rounded-xl hover:bg-slate-50 ${
-                  link.highlight ? 'text-gold-600 text-sm tracking-[0.2em] uppercase' : 'text-oxford-800 text-lg font-serif'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-
-            <div className="py-2">
-              <button
-                onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
-                className="w-full text-left flex justify-between items-center text-oxford-800 font-serif font-bold text-lg py-4 px-4 hover:bg-slate-50 rounded-xl transition-all"
-              >
-                Practice Areas
-                <svg className={`w-5 h-5 transition-transform duration-300 ${mobileServicesOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+            {/* Mobile hamburger */}
+            <div className="flex md:hidden">
+              <button id="mobile-menu-button" className="text-gray-700 hover:text-blue-600 focus:outline-none transition-colors" aria-label="Open menu">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
-              {mobileServicesOpen && (
-                <div className="mt-2 grid grid-cols-1 gap-2 pl-4 animate-in fade-in slide-in-from-top-4">
-                  {["Civil", "Criminal", "Corporate", "Family", "Property", "Court Marriage"].map((area) => (
-                    <Link 
-                      key={area} 
-                      href={`/services/${area.toLowerCase().replace(/\s+/g, '-')}`} 
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-slate-500 hover:text-gold-600 py-3 px-6 transition-colors text-sm font-bold uppercase tracking-widest border-l-2 border-slate-100 hover:border-gold-500"
-                    >
-                      {area} Law
-                    </Link>
-                  ))}
-                </div>
-              )}
             </div>
-            
-            <div className="pt-8">
-              <Link 
-                href="/login" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="block w-full py-5 bg-oxford-900 text-gold-400 font-bold rounded-[24px] text-center shadow-2xl hover:bg-gold-500 hover:text-oxford-900 transition-all uppercase tracking-widest text-[10px] relative overflow-hidden active:scale-95"
-              >
-                <span className="relative z-10 font-black">Secure Client Portal</span>
-              </Link>
+
+            {/* Logo + Brand */}
+            <div className="flex-1 flex justify-center md:justify-start">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 md:w-10 md:h-10 rotate-once animate-logo-glow cursor-pointer" onClick={scrollToTop}>
+                  <LogoSVG />
+                </div>
+                <a href="#" className="text-xl md:text-2xl font-bold text-gray-800 hover:text-blue-600 transition-all duration-300 animate-emerge hover:scale-105">
+                  NaiyeBharat
+                </a>
+              </div>
+            </div>
+
+            {/* Desktop Nav */}
+            <div className="hidden md:flex md:items-center space-x-6">
+              <a href="#home"    className="nav-link text-gray-700 hover:text-blue-600 font-medium transition-all duration-300">Home</a>
+              <a href="#about"   className="nav-link text-gray-700 hover:text-blue-600 font-medium transition-all duration-300">About Us</a>
+              <a href="prize.html" className="nav-link text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">Pricing</a>
+
+              {/* Services Dropdown */}
+              <div className="relative group">
+                <a href="#services" className="nav-link text-gray-700 hover:text-blue-600 font-medium flex items-center py-2 transition-colors">
+                  Services
+                  <svg className="w-4 h-4 ml-1 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </a>
+                <div className="absolute left-0 top-full mt-1 w-48 bg-white shadow-xl rounded-md border border-gray-100 py-2 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                  <a href="/civil"     className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Civil Law</a>
+                  <a href="/criminal"  className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Criminal Law</a>
+                  <a href="/Corporate" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Corporate Law</a>
+                  <a href="/family"    className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Family Law</a>
+                  <a href="/Property"  className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">Property Law</a>
+                  <a href="/CourtMarriage"       className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">marriages</a>
+                </div>
+              </div>
+
+              <a href="#Contact" className="nav-link text-gray-700 hover:text-blue-600 font-medium transition-colors">Contact</a>
+
+              <div className="button-bg rounded-full p-0.5 hover:scale-105 transition duration-300 active:scale-100">
+                <button onClick={() => (window.location.href = "/signup")} className="px-8 text-sm py-2.5 text-white rounded-full font-medium bg-gray-800">
+                  signup
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+
+        {/* Mobile Menu */}
+        <div id="mobile-menu" className="md:hidden hidden px-4 pt-2 pb-4 space-y-2 bg-white shadow-md border-t border-gray-100 transition-all duration-300">
+          <a href="#home"    className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">Home</a>
+          <a href="#about"   className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">About Us</a>
+          <a href="prize.html" className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">Pricing</a>
+          <div>
+            <button id="mobile-services-btn" className="w-full text-left flex justify-between items-center text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">
+              Services
+              <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div id="mobile-services-menu" style={{ maxHeight: "0px", overflow: "hidden", transition: "max-height 0.3s ease" }} className="pl-4 mt-1 space-y-1">
+              <a href="civil.html"     className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Civil Law</a>
+              <a href="criminal.html"  className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Criminal Law</a>
+              <a href="corporate.html" className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Corporate Law</a>
+              <a href="family.html"    className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Family Law</a>
+              <a href="property.html"  className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Property Law</a>
+              <a href="tax.html"       className="block text-gray-600 hover:text-blue-600 py-1 transition-colors">Court marriage</a>
+            </div>
+          </div>
+          <a href="#Contact" className="block text-gray-700 hover:text-blue-600 font-medium py-2 transition-colors">Contact</a>
+          <a href="/signup" className="block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-center shadow-md mt-3">
+            login/signup
+          </a>
+        </div>
+      </nav>
+    </>
   );
 }
