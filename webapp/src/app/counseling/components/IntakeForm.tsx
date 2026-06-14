@@ -5,11 +5,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { motion } from "framer-motion";
 import { X, CheckCircle2, AlertCircle, Sun, Moon, Sparkles } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";  // Commented: PNG files are corrupt, fix images before uncommenting
 
-import step1 from "@/assets/step_1.png";
-import step2 from "@/assets/step_2.png";
-import step3 from "@/assets/step_3.png";
+// import step1 from "@/assets/step_1.png";
+// import step2 from "@/assets/step_2.png";
+// import step3 from "@/assets/step_3.png";
 
 const ClientIntakeSchema = Yup.object({
   clientName: Yup.string().min(3, "Name must contain at least 3 characters").required("Your full name is required"),
@@ -23,11 +23,11 @@ const ClientIntakeSchema = Yup.object({
 
 const LOCAL_STORAGE_KEY = "counseling_intake_form_state";
 
-const STEPS = [
-  { img: step1, label: "Tell us your problem" },
-  { img: step2, label: "Get suitable advocate" },
-  { img: step3, label: "Secure Transaction" },
-];
+// const STEPS = [
+//   { img: step1, label: "Tell us your problem" },
+//   { img: step2, label: "Get suitable advocate" },
+//   { img: step3, label: "Secure Transaction" },
+// ];
 
 export default function IntakeForm({ onSuccess }: { onSuccess: (orderId: string | null, matchCriteria: { specialty: string; language: string }) => void }) {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -147,23 +147,7 @@ export default function IntakeForm({ onSuccess }: { onSuccess: (orderId: string 
           </p>
         </div>
 
-        {/* ── Three Step Images ── */}
-        <div className="grid grid-cols-3 gap-4 mb-10 max-w-3xl mx-auto">
-          {STEPS.map((step, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
-              <div className="w-full aspect-square max-w-[180px] bg-white dark:bg-[#0b1329] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm flex items-center justify-center p-4">
-                <Image
-                  src={step.img}
-                  alt={step.label}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              {/* <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 text-center tracking-wide">
-                {step.label}
-              </span> */}
-            </div>
-          ))}
-        </div>
+        {/* ── Three Step Images (temporarily removed — PNG files corrupt, fix later) ── */}
 
         {/* ── Progress Tracker ── */}
         <div className="flex items-center justify-between max-w-3xl mx-auto w-full mb-8 text-xs font-bold text-slate-700 dark:text-slate-500 px-4">
